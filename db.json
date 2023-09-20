@@ -1,0 +1,107 @@
+{
+    "stocks": [
+        {
+            "id": "AAPL",
+            "name": "Apple Inc.",
+            "price": 150.25,
+            "change": 2.75,
+            "percentChange": 1.87,
+            "index": 1
+        },
+        {
+            "id": "GOOGL",
+            "name": "Alphabet Inc.",
+            "price": 2750.50,
+            "change": 10.25,
+            "percentChange": 0.37,
+            "index": 2
+        },
+        {
+            "id": "AMZN",
+            "name": "Amazon.com Inc.",
+            "price": 3450.75,
+            "change": -5.50,
+            "percentChange": -0.16,
+            "index": 3
+        },
+        {
+            "id": "MSFT",
+            "name": "Microsoft Corporation",
+            "price": 300.15,
+            "change": 4.25,
+            "percentChange": 1.43,
+            "index": 4
+        },
+        {
+            "id": "TSLA",
+            "name": "Tesla, Inc.",
+            "price": 750.60,
+            "change": 12.35,
+            "percentChange": 1.67,
+            "index": 5
+        },
+        {
+            "id": "JPM",
+            "name": "JPMorgan Chase & Co.",
+            "price": 150.75,
+            "change": 1.45,
+            "percentChange": 0.97,
+            "index": 6
+        },
+        {
+            "id": "PFE",
+            "name": "Pfizer Inc.",
+            "price": 33.62,
+            "change": -0.36,
+            "percentChange": -1.09,
+            "index": 7
+        },
+        {
+            "id": "NVDA",
+            "name": "NVIDIA Corporation",
+            "price": 220.50,
+            "change": 5.25,
+            "percentChange": 2.44,
+            "index": 8
+        }
+    ],
+    "portfolio": {
+        "name": "My portfolio",
+        "balance": 10000,
+        "stocks": [
+            {
+                "stock": {
+                    "id": "AAPL",
+                    "name": "Apple Inc.",
+                    "price": 150.25,
+                    "change": 2.75,
+                    "percentChange": 1.87,
+                    "index": 1
+                },
+                "quantity": 10
+            },
+            {
+                "stock": {
+                    "id": "GOOGL",
+                    "name": "Alphabet Inc.",
+                    "price": 2750.50,
+                    "change": 10.25,
+                    "percentChange": 0.37,
+                    "index": 2
+                },
+                "quantity": 20
+            },
+            {
+                "stock": {
+                    "id": "JPM",
+                    "name": "JPMorgan Chase & Co.",
+                    "price": 150.75,
+                    "change": 1.45,
+                    "percentChange": 0.97,
+                    "index": 6
+                },
+                "quantity": 8
+            }
+        ]
+    }
+}

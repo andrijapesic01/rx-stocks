@@ -1,0 +1,103 @@
+body {
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+    height: 100%;
+}
+
+.top-section {
+    background-color: #3498db;
+    color: white;
+    text-align: center;
+    height: 20vh;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.bottom-section {
+    display: flex;
+    justify-content: space-between;
+   /*  height: 75vh; */
+    padding: 20px;
+}
+
+.stocks-section {
+    background-color: white;
+    flex: 4;
+    padding: 20px;
+    margin-right: 10px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+.portfolio-section {
+    background-color: white;
+    flex: 3;
+    padding: 20px;
+    margin-left: 10px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+.sub-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    /* margin-top: 0px; */
+    background-color: lightgray;
+    height: 50px;
+    margin-bottom: 10px;
+} 
+
+.stocks-section {
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+  }
+  
+  .stock {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .stock-image {
+    text-align: center;
+  }
+  
+  .stock-image img {
+    max-width: 120px;
+    height: 60px;
+  }
+  
+  .stock-info {
+    margin-top: 10px;
+  }
+  
+  .stock-info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+  }
+  
+
+/* .stocks-section {
+}
+
+.stock {
+    
+}
+
+.stock-image {
+  
+}
+
+.stock-image img{
+   
+}
+
+
+.stock-info {
+}
+.stock-info-row {
+} */
