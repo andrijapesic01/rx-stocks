@@ -1,103 +1,170 @@
 body {
-    background-color: #f0f0f0;
-    font-family: Arial, sans-serif;
-    height: 100%;
+  background-color: #f0f0f0;
+  font-family: Arial, sans-serif;
+  height: 100%;
 }
 
 .top-section {
-    background-color: #3498db;
-    color: white;
-    text-align: center;
-    height: 20vh;
-    margin-left: 20px;
-    margin-right: 20px;
+  background-color: #3498db;
+  color: white;
+  text-align: center;
+  height: 20vh;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 .bottom-section {
-    display: flex;
-    justify-content: space-between;
-   /*  height: 75vh; */
-    padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  /*  height: 75vh; */
+  padding: 20px;
 }
 
 .stocks-section {
-    background-color: white;
-    flex: 4;
-    padding: 20px;
-    margin-right: 10px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  background-color: white;
+  flex: 4;
+  padding: 20px;
+  margin-right: 10px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 }
 
 .portfolio-section {
-    background-color: white;
-    flex: 3;
-    padding: 20px;
-    margin-left: 10px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  background-color: white;
+  flex: 3;
+  padding: 20px;
+  margin-left: 10px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 }
 
 .sub-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    /* margin-top: 0px; */
-    background-color: lightgray;
-    height: 50px;
-    margin-bottom: 10px;
-} 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  /* margin-top: 0px; */
+  background-color: lightgray;
+  height: 50px;
+  margin-bottom: 10px;
+}
 
 .stocks-section {
-    background-color: #fff;
-    padding: 20px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
-  }
-  
-  .stock {
-    margin-bottom: 20px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-  }
-  
-  .stock-image {
-    text-align: center;
-  }
-  
-  .stock-image img {
-    max-width: 120px;
-    height: 60px;
-  }
-  
-  .stock-info {
-    margin-top: 10px;
-  }
-  
-  .stock-info-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 5px;
-  }
-  
-
-/* .stocks-section {
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
 }
 
 .stock {
-    
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
 }
 
 .stock-image {
-  
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.stock-image img{
-   
+.stock-image img {
+  max-width: 120px;
+  height: 60px;
+  margin-left: -30px;
 }
-
 
 .stock-info {
+  display: flex;
+  margin-top: 10px;
+  flex: 3;
 }
+
 .stock-info-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 5px;
+  width: 100%;
+}
+
+.buy-stock {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.quantity-input {
+  width: 50px;
+  padding: 5px;
+  text-align: center;
+}
+
+.buy-button {
+  width: 60px;
+  margin-left: 5px;
+  height: 30px;
+  color: white;
+  background-color:   rgb(16, 223, 16);
+  border: none; 
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+}
+
+.portfolio-bottom-section {
+  display: flex;
+  flex-direction: column;
+  background-color: lightgray;
+  padding: 10px;
+}
+
+.portfolio-bottom-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.balance-label {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.portfolio-stock {
+  border: 1px solid lightgray;
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+
+.portfolio-stock-row {
+  padding-top: 10px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+}
+
+.portfolio-stock-column {
+  padding: 5px;
+  margin-left: -10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.portfolio-sell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 20px;
+}
+
+/* .portfolio-bottom-row {
+  display: flex;
+  justify-content: space-between;
 } */
+

@@ -41,9 +41,9 @@
             "index": 5
         },
         {
-            "id": "JPM",
-            "name": "JPMorgan Chase & Co.",
-            "price": 150.75,
+            "id": "INTC",
+            "name": "Intel Corporation",
+            "price": 112.75,
             "change": 1.45,
             "percentChange": 0.97,
             "index": 6
@@ -67,7 +67,8 @@
     ],
     "portfolio": {
         "name": "My portfolio",
-        "balance": 10000,
+        "userBalance": 10000,
+        "stocksBalance": 57414.5,
         "stocks": [
             {
                 "stock": {
@@ -78,6 +79,7 @@
                     "percentChange": 1.87,
                     "index": 1
                 },
+                "boughtFor": 142.66,
                 "quantity": 10
             },
             {
@@ -89,17 +91,19 @@
                     "percentChange": 0.37,
                     "index": 2
                 },
+                "boughtFor": 2720,
                 "quantity": 20
             },
             {
                 "stock": {
-                    "id": "JPM",
-                    "name": "JPMorgan Chase & Co.",
-                    "price": 150.75,
+                    "id": "INTC",
+                    "name": "Intel Corporation",
+                    "price": 112.75,
                     "change": 1.45,
                     "percentChange": 0.97,
                     "index": 6
                 },
+                "boughtFor": 78.25,
                 "quantity": 8
             }
         ]

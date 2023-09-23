@@ -1,4 +1,4 @@
-import { getStocks } from "../controllers/stocks.controller";
+import { getStocks } from "../controllers/stockMarket.controller";
 import { drawStock } from "../views/stockView";
 
 export const loadStocks = (): void => {
@@ -8,4 +8,4 @@ export const loadStocks = (): void => {
         /* checkIfAdded(stock); */
       })
     );
-  };
+};

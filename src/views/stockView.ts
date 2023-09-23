@@ -1,6 +1,6 @@
 import { createDiv } from "../common"
 import { Stock } from "../models/Stock";
-import { drawPortfolio } from "./portfolioView";
+import { drawPortfolio, drawPortfolioStock } from "./portfolioView";
 
 export const drawStockMarket = (host: HTMLElement) : void => {
     const mainCont : HTMLElement = createDiv(host, "main-container");
@@ -11,6 +11,7 @@ export const drawStockMarket = (host: HTMLElement) : void => {
     const marketCont : HTMLElement = createDiv(mainCont, "bottom-section");
     
     const stocksCont: HTMLElement = createDiv(marketCont, "stocks-section");
+    const portfolioCont: HTMLElement = createDiv(marketCont, "portfolio-section")
 
     const stocksHeadline: HTMLElement = createDiv(stocksCont, "sub-header");
     const headline = document.createElement("h2");
@@ -18,7 +19,7 @@ export const drawStockMarket = (host: HTMLElement) : void => {
     headline.className = "stocks-hedline";
     stocksHeadline.appendChild(headline);
 
-    drawPortfolio(marketCont);
+    //drawPortfolio(marketCont);
 }
 
 export const drawStock = (stock: Stock) : void =>  {
@@ -34,11 +35,21 @@ export const drawStock = (stock: Stock) : void =>  {
     
     const stockInfoDiv: HTMLElement = createDiv(stockDiv, "stock-info");
     const topRowDiv: HTMLElement = createDiv(stockInfoDiv, "stock-info-row");
-    let text = document.createElement("p");
-    text.textContent = `(${stock.id}) (${stock.name})`;
-    topRowDiv.appendChild(text);
+    const topText = document.createElement("p");
+    topText.textContent = `(${stock.id}) ${stock.name}`;
+    topRowDiv.appendChild(topText);
+    const bottomText = document.createElement("p");
     const bottomRowDiv: HTMLElement = createDiv(stockInfoDiv, "stock-info-row");
-    text.textContent = `$${stock.price} ${stock.change} (${stock.percentChange})`;
-    bottomRowDiv.appendChild(text);
+    bottomText.textContent = `$${stock.price} ${stock.change} (${stock.percentChange}%)`;
+    bottomRowDiv.appendChild(bottomText);
 
+    const buyDiv: HTMLElement = createDiv(stockDiv, "buy-stock");
+    const stockQuantity: HTMLElement = document.createElement("input");
+    stockQuantity.ariaPlaceholder = "Quantity";
+    stockQuantity.className = "quantity-input";
+    buyDiv.appendChild(stockQuantity);
+    const buyBtn: HTMLElement = document.createElement("button");
+    buyBtn.innerHTML = "Buy";
+    buyBtn.className = "buy-button";
+    buyDiv.appendChild(buyBtn);
 }
