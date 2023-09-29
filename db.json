@@ -1,111 +1,68 @@
 {
-    "stocks": [
-        {
-            "id": "AAPL",
-            "name": "Apple Inc.",
-            "price": 150.25,
-            "change": 2.75,
-            "percentChange": 1.87,
-            "index": 1
-        },
-        {
-            "id": "GOOGL",
-            "name": "Alphabet Inc.",
-            "price": 2750.50,
-            "change": 10.25,
-            "percentChange": 0.37,
-            "index": 2
-        },
-        {
-            "id": "AMZN",
-            "name": "Amazon.com Inc.",
-            "price": 3450.75,
-            "change": -5.50,
-            "percentChange": -0.16,
-            "index": 3
-        },
-        {
-            "id": "MSFT",
-            "name": "Microsoft Corporation",
-            "price": 300.15,
-            "change": 4.25,
-            "percentChange": 1.43,
-            "index": 4
-        },
-        {
-            "id": "TSLA",
-            "name": "Tesla, Inc.",
-            "price": 750.60,
-            "change": 12.35,
-            "percentChange": 1.67,
-            "index": 5
-        },
-        {
-            "id": "INTC",
-            "name": "Intel Corporation",
-            "price": 112.75,
-            "change": 1.45,
-            "percentChange": 0.97,
-            "index": 6
-        },
-        {
-            "id": "PFE",
-            "name": "Pfizer Inc.",
-            "price": 33.62,
-            "change": -0.36,
-            "percentChange": -1.09,
-            "index": 7
-        },
-        {
-            "id": "NVDA",
-            "name": "NVIDIA Corporation",
-            "price": 220.50,
-            "change": 5.25,
-            "percentChange": 2.44,
-            "index": 8
-        }
-    ],
-    "portfolio": {
-        "name": "My portfolio",
-        "userBalance": 10000,
-        "stocksBalance": 57414.5,
-        "stocks": [
-            {
-                "stock": {
-                    "id": "AAPL",
-                    "name": "Apple Inc.",
-                    "price": 150.25,
-                    "change": 2.75,
-                    "percentChange": 1.87,
-                    "index": 1
-                },
-                "boughtFor": 142.66,
-                "quantity": 10
-            },
-            {
-                "stock": {
-                    "id": "GOOGL",
-                    "name": "Alphabet Inc.",
-                    "price": 2750.50,
-                    "change": 10.25,
-                    "percentChange": 0.37,
-                    "index": 2
-                },
-                "boughtFor": 2720,
-                "quantity": 20
-            },
-            {
-                "stock": {
-                    "id": "INTC",
-                    "name": "Intel Corporation",
-                    "price": 112.75,
-                    "change": 1.45,
-                    "percentChange": 0.97,
-                    "index": 6
-                },
-                "boughtFor": 78.25,
-                "quantity": 8
-            }
-        ]
+  "stocks": [
+    {
+      "id": "AAPL",
+      "name": "Apple Inc.",
+      "price": 2420.64,
+      "change": 19.09,
+      "percentChange": 0.79,
+      "index": 18.1
+    },
+    {
+      "id": "GOOGL",
+      "name": "Alphabet Inc.",
+      "price": 2761.5,
+      "change": 11,
+      "percentChange": 0.4,
+      "index": 10
+    },
+    {
+      "id": "AMZN",
+      "name": "Amazon.com Inc.",
+      "price": 3480.75,
+      "change": 13,
+      "percentChange": 0.37,
+      "index": 12
+    },
+    {
+      "id": "MSFT",
+      "name": "Microsoft Corporation",
+      "price": 300.15,
+      "change": 4.25,
+      "percentChange": 1.43,
+      "index": 4
+    },
+    {
+      "id": "TSLA",
+      "name": "Tesla, Inc.",
+      "price": 750.6,
+      "change": 12.35,
+      "percentChange": 1.67,
+      "index": 11
+    },
+    {
+      "id": "INTC",
+      "name": "Intel Corporation",
+      "price": 112.75,
+      "change": 1.45,
+      "percentChange": 0.97,
+      "index": 6
+    },
+    {
+      "id": "PFE",
+      "name": "Pfizer Inc.",
+      "price": 33.62,
+      "change": -0.36,
+      "percentChange": -1.09,
+      "index": 7
+    },
+    {
+      "id": "NVDA",
+      "name": "NVIDIA Corporation",
+      "price": 220.5,
+      "change": 5.25,
+      "percentChange": 2.44,
+      "index": 8
     }
+  ]
 }

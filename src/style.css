@@ -1,3 +1,4 @@
+
 body {
   background-color: #f0f0f0;
   font-family: Arial, sans-serif;
@@ -11,6 +12,8 @@ body {
   height: 20vh;
   margin-left: 20px;
   margin-right: 20px;
+  font-family: UnifrakturMaguntia, sans-serif;
+  font-size: 45px;
 }
 
 .bottom-section {
@@ -168,3 +171,11 @@ body {
   justify-content: space-between;
 } */
 
+.search-input {
+  display: flex;
+  margin-bottom: 10px;
+  justify-content: center;
+  width: 300px;
+  height: 25px;
+  margin-left: 200px;
+}

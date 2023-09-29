@@ -1,11 +1,12 @@
-import { max } from "rxjs";
 import { createDiv, createLabel } from "../common"
 import { calculateProfit } from "../logic/portfolioLogic";
 import { BoughtStock } from "../models/BoughtStock";
 import { Portfolio } from "../models/Portfolio";
 import { Stock } from "../models/Stock";
+import { portfolio } from "../constants";
+import { userSellStock } from "../logic/stocksLogic";
 
-export const drawPortfolio = (portfolio: Portfolio) : void => {
+export const drawPortfolio = (): void => {
 
     const portfolioDiv: HTMLElement = document.querySelector(".portfolio-section");
 
@@ -19,13 +20,13 @@ export const drawPortfolio = (portfolio: Portfolio) : void => {
 
     const bottomDiv = createDiv(portfolioDiv, "portfolio-bottom-section");
 
-    drawPortfolioStocks(portfolio);
-    drawPortfolioBalance(bottomDiv, portfolio);
-    
+    //drawPortfolioStocks();
+    drawPortfolioBalance(bottomDiv);
+
 }
 
-export const drawPortfolioBalance = (host: HTMLElement, portfolio: Portfolio) : void => {
-    
+export const drawPortfolioBalance = (host: HTMLElement): void => {
+    //const portfolio : Portfolio = { name: "My portfolio", userBalance: 10000, stocksBalance: 0, stocks: [] };
     const topRowDiv = createDiv(host, "portfolio-bottom-row");
 
     const trdColumn1 = createDiv(topRowDiv, "portfolio-bottom-row-colum");
@@ -35,12 +36,11 @@ export const drawPortfolioBalance = (host: HTMLElement, portfolio: Portfolio) : 
     stocksBalanceValue.innerHTML = `${portfolio.stocksBalance}`;
 
     const trdColumn2 = createDiv(topRowDiv, "portfolio-bottom-row-colum");
-    const totalProfit = calculateProfit(portfolio).toFixed(2);
     const totalProfitLbl = createLabel(trdColumn2, "balance-label");
     totalProfitLbl.innerHTML = "Total profit: $";
     const totalProfitValue = createLabel(trdColumn2, "total-profit-value");
-    totalProfitValue.innerHTML = `${totalProfit}`;
-    
+    totalProfitValue.innerHTML = `${0}`;
+
     const btmRowDiv = createDiv(host, "portfolio-bottom-row");
 
     const brdColumn1 = createDiv(btmRowDiv, "portfolio-bottom-row-column");
@@ -54,25 +54,103 @@ export const drawPortfolioBalance = (host: HTMLElement, portfolio: Portfolio) : 
     totalLabel.innerHTML = "Total balance: $";
     const totalValue = createLabel(brdColumn2, "portfolio-total-value");
     totalValue.innerHTML = `${portfolio.userBalance + portfolio.stocksBalance}`;
-} 
+}
 
 export const drawPortfolioStocks = (portfolio: Portfolio): void => {
     portfolio.stocks.forEach((stock) => drawPortfolioStock(stock));
 }
 
-export const drawPortfolioStock = (boughtStock: BoughtStock) : void => {
+export const drawPortfolioStock = (boughtStock: BoughtStock): void => {
 
     const { boughtFor, quantity, stock } = boughtStock;
 
-    const host : HTMLElement = document.querySelector(".portfolio-stocks-section");
-    
+    const host: HTMLElement = document.querySelector(".portfolio-stocks-section");
+
     const stockDiv = createDiv(host, "portfolio-stock");
+    stockDiv.id = `portfolio-stock-${stock.id}`;
     const stockRowTop = createDiv(stockDiv, "portfolio-stock-row");
     const stockCompanyName = createLabel(stockRowTop, "label");
     stockCompanyName.innerHTML = `${stock.id} (${stock.name}) - ${quantity} stocks`;
 
     const stockRowBottom = createDiv(stockDiv, "portfolio-stock-row");
-    
+
+    const boughtForColumn = createDiv(stockRowBottom, "portfolio-stock-column");
+    const boughtForLbl = createLabel(boughtForColumn, "label");
+    boughtForLbl.innerHTML = "Bought for: $";
+    const boughtForValue = createLabel(boughtForColumn, "bought-for-value");
+    boughtForValue.innerHTML = `${boughtFor.toFixed(2)}`;
+
+    const currentPriceColumn = createDiv(stockRowBottom, "portfolio-stock-column");
+    const currentPrice = createLabel(currentPriceColumn, "label");
+    currentPrice.innerHTML = "Current price: $";
+    const currentPriceValue = createLabel(currentPriceColumn, "current-value");
+    currentPriceValue.innerHTML = `${stock.price.toFixed(2)}`;
+
+    const profitColumn = createDiv(stockRowBottom, "portfolio-stock-column");
+    const profit = createLabel(profitColumn, "label");
+    profit.innerHTML = "Profit: $";
+    const profitValue = createLabel(profitColumn, "portfolio-stock-profit-value");
+    profitValue.innerHTML = `${(stock.price - boughtFor).toFixed(2)}`;
+
+    const sellColumn = createDiv(stockRowBottom, "portfolio-sell");
+    const inputQuantity: HTMLInputElement = document.createElement("input");
+    inputQuantity.setAttribute("type", "number");
+    inputQuantity.setAttribute("min", "0"); 
+    inputQuantity.setAttribute("max", quantity.toString());
+    inputQuantity.setAttribute("value", quantity.toString());
+    inputQuantity.className = "quantity-input";
+    sellColumn.appendChild(inputQuantity);
+
+    const sellButton: HTMLElement = document.createElement("button");
+    sellButton.innerHTML = "Sell";
+    sellButton.className = "buy-button";
+    sellButton.onclick = () => userSellStock(stock, parseInt(inputQuantity.value, 10));
+    sellColumn.appendChild(sellButton);
+
+    updatePortfolioBalance()
+}
+
+export const updatePortfolioBalance = (): void => {
+
+    const stocksBalanceValue = document.querySelector(".stocks-value");
+    stocksBalanceValue.innerHTML = `${portfolio.stocksBalance.toFixed(2)}`;
+
+    const totalProfit = calculateProfit();
+    const totalProfitValue = document.querySelector(".total-profit-value");
+    totalProfitValue.innerHTML = `${totalProfit.toFixed(2)}`;
+
+    const balaceValue = document.querySelector(".balance-value");
+    balaceValue.innerHTML = `${portfolio.userBalance.toFixed(2)}`;
+
+    const totalValue = document.querySelector(".portfolio-total-value");
+    totalValue.innerHTML = `${(portfolio.userBalance + portfolio.stocksBalance).toFixed(2)}`;
+}
+
+export const removePortfolioStock = (stockId: string): void => {
+
+    const stockDivToRemove = document.getElementById(`portfolio-stock-${stockId}`);
+    if (stockDivToRemove) {
+        stockDivToRemove.remove();
+        updatePortfolioBalance();
+    }
+}
+
+export const updatePortfolioStock = (portfolioStock: BoughtStock) : void => {
+    const { boughtFor, quantity, stock } = portfolioStock;
+
+    removePortfolioStock(stock.id);
+    drawPortfolioStock(portfolioStock);
+
+    /* const host: HTMLElement = document.querySelector(".portfolio-stocks-section");
+
+    const stockDiv = createDiv(host, "portfolio-stock");
+    stockDiv.id = `portfolio-stock-${stock.id}`;
+    const stockRowTop = createDiv(stockDiv, "portfolio-stock-row");
+    const stockCompanyName = createLabel(stockRowTop, "label");
+    stockCompanyName.innerHTML = `${stock.id} (${stock.name}) - ${quantity} stocks`;
+
+    const stockRowBottom = createDiv(stockDiv, "portfolio-stock-row");
+
     const boughtForColumn = createDiv(stockRowBottom, "portfolio-stock-column");
     const boughtForLbl = createLabel(boughtForColumn, "label");
     boughtForLbl.innerHTML = "Bought for: $";
@@ -89,19 +167,22 @@ export const drawPortfolioStock = (boughtStock: BoughtStock) : void => {
     const profit = createLabel(profitColumn, "label");
     profit.innerHTML = "Profit: $";
     const profitValue = createLabel(profitColumn, "portfolio-stock-profit-value");
-    profitValue.innerHTML = `${(stock.price-boughtFor).toFixed(2)}`;
-    
+    profitValue.innerHTML = `${(stock.price - boughtFor).toFixed(2)}`;
+
     const sellColumn = createDiv(stockRowBottom, "portfolio-sell");
-    const inputQuantity : HTMLElement = document.createElement("input");
-    inputQuantity.setAttribute("type", "number");// = "Number";
+    const inputQuantity: HTMLInputElement = document.createElement("input");
+    inputQuantity.setAttribute("type", "number");
     inputQuantity.setAttribute("min", "0");
     inputQuantity.setAttribute("max", quantity.toString());
     inputQuantity.setAttribute("value", quantity.toString());
     inputQuantity.className = "quantity-input";
     sellColumn.appendChild(inputQuantity);
 
-    const sellButton : HTMLElement = document.createElement("button");
+    const sellButton: HTMLElement = document.createElement("button");
     sellButton.innerHTML = "Sell";
     sellButton.className = "buy-button";
-    sellColumn.appendChild(sellButton);
+    sellButton.onclick = () => userSellStock(stock, parseInt(inputQuantity.value, 10));
+    sellColumn.appendChild(sellButton); */
+
+    updatePortfolioBalance()
 }

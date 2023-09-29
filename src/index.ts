@@ -1,9 +1,10 @@
-import { getStocks } from "./controllers/stockMarket.controller";
-import { loadPortfolio } from "./logic/portfolioLogic";
-import { loadStocks } from "./logic/stocksLogic";
+import { handleSearch, loadStocks } from "./logic/stocksLogic";
 import { drawStockMarket } from "./views/stockView";
 
 drawStockMarket(document.body);
 
 loadStocks();
-loadPortfolio();
+//simulateMarket();
+handleSearch();
+//loadPortfolio();
+//buyStock("AAPL", 10);
