@@ -40,34 +40,34 @@ export const updateStock = (stock: Stock): Observable<Stock> => {
         },
         body: JSON.stringify(stock),
     })
-    .then((res) => {
-        if (!res.ok) {
-            throw new Error("Failed to update stock!");
-        } else {
-            return res.json();
-        }
-    })
-    .catch((err) => {
-        console.error(err);
-    });
-    
+        .then((res) => {
+            if (!res.ok) {
+                throw new Error("Failed to update stock!");
+            } else {
+                return res.json();
+            }
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+
     return from(promise);
 }
 
 export const getStocksByQuery = (query: string): Observable<Stock[]> => {
     const promise: Promise<Stock[]> = fetch(
-      `${SERVER_ADDRESS}/stocks?q=${query}`
+        `${SERVER_ADDRESS}/stocks?q=${query}`
     )
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("No matches found!");
-        } else {
-          return res.json();
-        }
-      })
-      .catch((err) => console.error(err));
+        .then((res) => {
+            if (!res.ok) {
+                throw new Error("No matches found!");
+            } else {
+                return res.json();
+            }
+        })
+        .catch((err) => console.error(err));
     return from(promise);
-  };
+};
 
 
 /* export const getPortfolio = (): Observable<Portfolio> => {

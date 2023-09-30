@@ -1,22 +1,4 @@
-
 import { portfolio } from "../constants";
-
-/* export const loadPortfolio = (): void => {
-    getPortfolio().subscribe((portfolio) => {
-        drawPortfolio(portfolio);
-    })
-}; */
-
-/* export const calculateProfit = (): number => {
-    let totalProfit = 0;
-    console.log(portfolio.stocks);
-    portfolio.stocks.forEach((boughtStock) => {
-        const { stock, boughtFor, quantity } = boughtStock;
-        totalProfit += (stock.price - boughtFor) * quantity;        
-    });
-
-    return totalProfit;
-} */
 
 export const calculateProfit = (): number => {
     return portfolio.stocks.reduce((totalProfit, boughtStock) => {
@@ -31,3 +13,4 @@ export const calculateStocksBalance = () : number => {
         return stocksBalance + stock.price;
     }, 0);
 }
+

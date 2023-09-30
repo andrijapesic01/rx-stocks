@@ -26,7 +26,6 @@ export const drawPortfolio = (): void => {
 }
 
 export const drawPortfolioBalance = (host: HTMLElement): void => {
-    //const portfolio : Portfolio = { name: "My portfolio", userBalance: 10000, stocksBalance: 0, stocks: [] };
     const topRowDiv = createDiv(host, "portfolio-bottom-row");
 
     const trdColumn1 = createDiv(topRowDiv, "portfolio-bottom-row-colum");
@@ -95,7 +94,7 @@ export const drawPortfolioStock = (boughtStock: BoughtStock): void => {
     const sellColumn = createDiv(stockRowBottom, "portfolio-sell");
     const inputQuantity: HTMLInputElement = document.createElement("input");
     inputQuantity.setAttribute("type", "number");
-    inputQuantity.setAttribute("min", "0"); 
+    inputQuantity.setAttribute("min", "0");
     inputQuantity.setAttribute("max", quantity.toString());
     inputQuantity.setAttribute("value", quantity.toString());
     inputQuantity.className = "quantity-input";
@@ -128,61 +127,64 @@ export const updatePortfolioBalance = (): void => {
 
 export const removePortfolioStock = (stockId: string): void => {
 
-    const stockDivToRemove = document.getElementById(`portfolio-stock-${stockId}`);
-    if (stockDivToRemove) {
+    const stockDivToRemove : HTMLElement | null = document.getElementById(`portfolio-stock-${stockId}`);
+    if (stockDivToRemove !== null) {
         stockDivToRemove.remove();
         updatePortfolioBalance();
     }
 }
 
-export const updatePortfolioStock = (portfolioStock: BoughtStock) : void => {
+/* export const updatePortfolioStock = (portfolioStock: BoughtStock): void => {
     const { boughtFor, quantity, stock } = portfolioStock;
 
     removePortfolioStock(stock.id);
     drawPortfolioStock(portfolioStock);
-
-    /* const host: HTMLElement = document.querySelector(".portfolio-stocks-section");
-
-    const stockDiv = createDiv(host, "portfolio-stock");
-    stockDiv.id = `portfolio-stock-${stock.id}`;
-    const stockRowTop = createDiv(stockDiv, "portfolio-stock-row");
-    const stockCompanyName = createLabel(stockRowTop, "label");
-    stockCompanyName.innerHTML = `${stock.id} (${stock.name}) - ${quantity} stocks`;
-
-    const stockRowBottom = createDiv(stockDiv, "portfolio-stock-row");
-
-    const boughtForColumn = createDiv(stockRowBottom, "portfolio-stock-column");
-    const boughtForLbl = createLabel(boughtForColumn, "label");
-    boughtForLbl.innerHTML = "Bought for: $";
-    const boughtForValue = createLabel(boughtForColumn, "bought-for-value");
-    boughtForValue.innerHTML = `${boughtFor}`;
-
-    const currentPriceColumn = createDiv(stockRowBottom, "portfolio-stock-column");
-    const currentPrice = createLabel(currentPriceColumn, "label");
-    currentPrice.innerHTML = "Current price: $";
-    const currentPriceValue = createLabel(currentPriceColumn, "current-value");
-    currentPriceValue.innerHTML = `${stock.price}`;
-
-    const profitColumn = createDiv(stockRowBottom, "portfolio-stock-column");
-    const profit = createLabel(profitColumn, "label");
-    profit.innerHTML = "Profit: $";
-    const profitValue = createLabel(profitColumn, "portfolio-stock-profit-value");
-    profitValue.innerHTML = `${(stock.price - boughtFor).toFixed(2)}`;
-
-    const sellColumn = createDiv(stockRowBottom, "portfolio-sell");
-    const inputQuantity: HTMLInputElement = document.createElement("input");
-    inputQuantity.setAttribute("type", "number");
-    inputQuantity.setAttribute("min", "0");
-    inputQuantity.setAttribute("max", quantity.toString());
-    inputQuantity.setAttribute("value", quantity.toString());
-    inputQuantity.className = "quantity-input";
-    sellColumn.appendChild(inputQuantity);
-
-    const sellButton: HTMLElement = document.createElement("button");
-    sellButton.innerHTML = "Sell";
-    sellButton.className = "buy-button";
-    sellButton.onclick = () => userSellStock(stock, parseInt(inputQuantity.value, 10));
-    sellColumn.appendChild(sellButton); */
-
     updatePortfolioBalance()
+} */
+
+export const updatePortfolioStock = (portfolioStock: BoughtStock): void => {
+
+    const { boughtFor, quantity, stock } = portfolioStock;
+
+    const stockDiv: HTMLElement | null = document.getElementById(`portfolio-stock-${stock.id}`);
+    if (stockDiv) {
+
+        if (quantity !== undefined) {
+            const quantityLabel: HTMLElement | null = stockDiv.querySelector(".label");
+            if (quantityLabel) {
+                quantityLabel.innerHTML = `${stock.id} (${stock.name}) - ${quantity} stocks`;
+            }
+        }
+
+        if (boughtFor !== undefined) {
+            const boughtForValue: HTMLElement | null = stockDiv.querySelector(".bought-for-value");
+            if (boughtForValue) {
+                boughtForValue.innerHTML = `${boughtFor.toFixed(2)}`;
+            }
+        }
+
+        updatePortfolioStockInfo(stock);
+        //supdatePortfolioBalance();
+    }
 }
+
+export const updatePortfolioStockInfo = (stock: Stock): void => {
+
+    const stockDiv: HTMLElement | null = document.getElementById(`portfolio-stock-${stock.id}`);
+
+    if(stockDiv === null) return;
+    
+    if (stock !== undefined) {
+        const currentPriceLabel: HTMLElement | null = stockDiv.querySelector(".curent-value");
+        if (currentPriceLabel) {
+            currentPriceLabel.innerHTML = `${stock.price.toFixed(2)}`;
+        }
+
+        const stockProfitLabel: HTMLElement | null = stockDiv.querySelector(".portfolio-stock-profit-value");
+        const boughtFor : number = Number(stockDiv.querySelector(".bought-for-value").innerHTML);
+        stockProfitLabel.innerHTML = `${(stock.price - boughtFor).toFixed(2)}`;
+    }
+
+    updatePortfolioBalance();
+
+};

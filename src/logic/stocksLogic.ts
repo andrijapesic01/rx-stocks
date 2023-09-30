@@ -1,12 +1,15 @@
-import { EMPTY, Observable, catchError, debounceTime, filter, fromEvent, groupBy, interval, map, merge, mergeMap, of, reduce, switchMap, tap, throwError, toArray } from "rxjs";
+import { Subject, debounceTime, filter, fromEvent, groupBy, interval, map, merge, mergeMap, of, scan, switchMap, tap } from "rxjs";
 import { INPUT_DEBOUNCE, portfolio } from "../constants";
-import { getStock, getStocks, getStocksByQuery, updateStock } from "../controllers/stockMarket.controller";
+import { getStocks, getStocksByQuery, updateStock } from "../controllers/stockMarket.controller";
 import { BoughtStock } from "../models/BoughtStock";
 import { Stock } from "../models/Stock";
 import { drawPortfolioStock, removePortfolioStock, updatePortfolioBalance, updatePortfolioStock } from "../views/portfolioView";
 import { clearStocks, drawStock, refreshStock, updateStockPrice } from "../views/stockView";
 import { calculateStocksBalance } from "./portfolioLogic";
 import { getRandomNum } from "../common";
+import { StockActivity, stockAction } from "../models/StockActivity";
+
+export const stockActivitySubject = new Subject<StockActivity>();
 
 export const loadStocks = (): void => {
   getStocks().subscribe((stocks) => {
@@ -16,7 +19,7 @@ export const loadStocks = (): void => {
       drawStock(stock);
       //updateStockPrice(stock);
       /* checkIfAdded(stock); */
-    }) 
+    })
   }
   );
 };
@@ -91,7 +94,7 @@ export const userBuyStock = (stock: Stock, quantity: number): void => {
 }
 
 export const sellStock = (stock: Stock, quantity: number): Stock => {
-  if(stock.price === 0)
+  if (stock.price === 0)
     return;
   stock.index -= (stock.price + quantity * stock.index) / stock.price * stock.index;
   let newPrice = stock.price - stock.index * (0.3 * stock.price + stock.change) / stock.price;
@@ -115,17 +118,19 @@ export const userSellStock = (stock: Stock, quantity: number): void => {
 
 export const simulateStockActivity = (stock: Stock) => {
 
-  return interval(getRandomNum(5500, 22500)).pipe(
+  return interval(getRandomNum(10500, 22500)).pipe(
     mergeMap(() => {
-      const randomStockQuantity = getRandomNum(1, 15);
-      const randomAction = getRandomNum(0, 2) >= 1 ? 'sell' : 'buy';
+      const randomStockQuantity = getRandomNum(1, 20);
+      const randomAction = getRandomNum(0, 2) >= 1 ? stockAction.SELL : stockAction.BUY;
 
-      if (randomAction === 'buy') {
-        buyStock(stock, randomStockQuantity);
+      if (randomAction === stockAction.BUY) {
+        const updatedStock = buyStock(stock, randomStockQuantity);
         console.log(`Bought ${randomStockQuantity} shares of ${stock.id}`);
+        stockActivitySubject.next({ stock: updatedStock, action: stockAction.BUY, quantity: randomStockQuantity });
       } else {
-        sellStock(stock, randomStockQuantity);
+        const updatedStock = sellStock(stock, randomStockQuantity);
         console.log(`Sold ${randomStockQuantity} shares of ${stock.id}`);
+        stockActivitySubject.next({ stock: updatedStock, action: stockAction.SELL, quantity: randomStockQuantity });
       }
 
       return of({ stock, action: randomAction, quantity: randomStockQuantity });
@@ -143,9 +148,9 @@ export const monitorAndSuggest = (stocks: Stock[]): void => {
       groupBy((data) => data.stock.name),
       mergeMap((group$) =>
         group$.pipe(
-          reduce(
+          scan(
             (acc, curr) => {
-              if (curr.action === 'buy') {
+              if (curr.action === stockAction.BUY) {
                 acc.buyCount += 1;
                 acc.totalBuyQuantity += curr.quantity;
               } else {
@@ -157,8 +162,23 @@ export const monitorAndSuggest = (stocks: Stock[]): void => {
             { stockName: group$.key, buyCount: 0, sellCount: 0, totalBuyQuantity: 0, totalSellQuantity: 0 }
           )
         )
-      ), //->NISTA POSLE OVOG *****
-      toArray(),
+      ),
+      scan((acc, stock) => {
+        const existingStockIndex = acc.findIndex((item) => item.stockName === stock.stockName);
+
+        if (existingStockIndex !== -1) {
+          acc[existingStockIndex] = {
+            ...acc[existingStockIndex],
+            buyCount: stock.buyCount,
+            sellCount: stock.sellCount,
+            totalBuyQuantity: stock.totalBuyQuantity,
+            totalSellQuantity: stock.totalSellQuantity,
+          };
+        } else {
+          acc.push(stock);
+        }
+        return acc;
+      }, []),
       map((results) => {
         console.log(results);
         return results.map((result) => {
