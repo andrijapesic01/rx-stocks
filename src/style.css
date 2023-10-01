@@ -77,7 +77,7 @@ body {
 .stock-image img {
   max-width: 120px;
   height: 60px;
-  margin-left: -30px;
+  /* margin-left: -30px; */
 }
 
 .stock-info {
@@ -178,4 +178,8 @@ body {
   width: 300px;
   height: 25px;
   margin-left: 200px;
+}
+
+.stock-marker{
+  width: 25px;
 }

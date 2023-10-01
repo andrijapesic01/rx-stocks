@@ -1,6 +1,8 @@
 import { createDiv } from "../common"
+import { updateStock } from "../controllers/stockMarket.controller";
 import { userBuyStock } from "../logic/stocksLogic";
 import { Stock } from "../models/Stock";
+import { StockSuggestion } from "../models/StockSugestion";
 import { drawPortfolio, drawPortfolioStock } from "./portfolioView";
 
 export const drawStockMarket = (host: HTMLElement): void => {
@@ -63,13 +65,20 @@ export const drawStock = (stock: Stock): void => {
     const stockQuantity: HTMLInputElement = document.createElement("input");
     stockQuantity.ariaPlaceholder = "Quantity";
     stockQuantity.className = "quantity-input";
-    stockQuantity.setAttribute("min", "0"); //= "quantity-input";
+    stockQuantity.setAttribute("min", "0");
     buyDiv.appendChild(stockQuantity);
     const buyBtn: HTMLElement = document.createElement("button");
     buyBtn.innerHTML = "Buy";
     buyBtn.className = "buy-button";
     buyBtn.onclick = () => userBuyStock(stock, parseInt(stockQuantity.value, 10));
     buyDiv.appendChild(buyBtn);
+
+    const markerDiv: HTMLElement = createDiv(buyDiv, "stock-marker");
+    let marker = document.createElement("img");
+    marker.className = "marker";
+    marker.id = `marker-${stock.name}`;
+    marker.style.visibility = "hidden";
+    markerDiv.appendChild(marker);
 }
 
 export const updateStockPrice = (stock: Stock): void => {
@@ -94,7 +103,7 @@ export const clearStocks = (): void => {
     }
 };
 
-export const refreshStock = (stock: Stock) : void => {
+export const refreshStock = (stock: Stock): void => {
     const stockInfo = document.getElementById(`stock-info-${stock.id}`);
     const label1: HTMLElement = document.createElement("label");
     label1.innerHTML = `$${stock.price.toFixed(2)} `;
@@ -104,4 +113,28 @@ export const refreshStock = (stock: Stock) : void => {
     label2.style.color = stock.change >= 0 ? "green" : "red";
     label1.appendChild(label2);
     stockInfo.innerHTML = label1.innerHTML;
+}
+
+export const updateStockMarkers = (suggestion: StockSuggestion): void => {
+
+    const markers = document.querySelectorAll('.stock-marker');
+    if (markers) {
+        markers.forEach((marker) => {
+            const img = marker.querySelector('img');
+            img.style.visibility = 'hidden';
+        })
+    }
+
+    const hotMarker = document.getElementById(`marker-${suggestion.hotStock}`) as HTMLImageElement | null;
+    if (hotMarker) {
+        hotMarker.src = `./icons/fire.png`;
+        hotMarker.style.visibility = 'visible';
+    }
+
+    const coldMarker = document.getElementById(`marker-${suggestion.coldStock}`) as HTMLImageElement | null;
+    if (coldMarker) {
+        coldMarker.src = `./icons/ice.png`;
+        coldMarker.style.visibility = 'visible';
+        console.log("COLD MARKER TEST");
+    }
 }

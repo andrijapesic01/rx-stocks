@@ -4,21 +4,20 @@ import { getStocks, getStocksByQuery, updateStock } from "../controllers/stockMa
 import { BoughtStock } from "../models/BoughtStock";
 import { Stock } from "../models/Stock";
 import { drawPortfolioStock, removePortfolioStock, updatePortfolioBalance, updatePortfolioStock } from "../views/portfolioView";
-import { clearStocks, drawStock, refreshStock, updateStockPrice } from "../views/stockView";
+import { clearStocks, drawStock, refreshStock, updateStockMarkers, updateStockPrice } from "../views/stockView";
 import { calculateStocksBalance } from "./portfolioLogic";
 import { getRandomNum } from "../common";
 import { StockActivity, stockAction } from "../models/StockActivity";
+import { StockSuggestion } from "../models/StockSugestion";
 
 export const stockActivitySubject = new Subject<StockActivity>();
+export const stockSuggestionSubject = new Subject<StockSuggestion>();
 
 export const loadStocks = (): void => {
   getStocks().subscribe((stocks) => {
-
     monitorAndSuggest(stocks);
     stocks.forEach((stock) => {
       drawStock(stock);
-      //updateStockPrice(stock);
-      /* checkIfAdded(stock); */
     })
   }
   );
@@ -59,6 +58,7 @@ export const buyStock = (stock: Stock, quantity: number): Stock => {
   stock.price = newPrice;
 
   //const updatedStock = updateStock(stock);
+  refreshStock(stock);
   return stock;
 }
 
@@ -194,6 +194,11 @@ export const monitorAndSuggest = (stocks: Stock[]): void => {
 
         console.log(`HOT Stock: ${HOT.stockName} (Buy-to-Sell Ratio: ${HOT.buyToSellRatio})`);
         console.log(`COLD Stock: ${COLD.stockName} (Buy-to-Sell Ratio: ${COLD.buyToSellRatio})`);
+        stockSuggestionSubject.next({ coldStock: COLD.stockName, hotStock: HOT.stockName })
       }),
     ).subscribe();
 };
+/* 
+export const handleStockSuggestion = (suggestion: StockSuggestion) : void => {
+  updateStockMarkers(suggestion); 
+} */

@@ -1,6 +1,6 @@
-import { handleSearch, loadStocks, stockActivitySubject } from "./logic/stocksLogic";
+import { handleSearch, loadStocks, stockActivitySubject, stockSuggestionSubject } from "./logic/stocksLogic";
 import { updatePortfolioStock, updatePortfolioStockInfo } from "./views/portfolioView";
-import { drawStockMarket } from "./views/stockView";
+import { drawStockMarket, updateStockMarkers } from "./views/stockView";
 
 drawStockMarket(document.body);
 
@@ -8,6 +8,7 @@ loadStocks();
 //simulateMarket();
 handleSearch();
 //loadPortfolio();
-//buyStock("AAPL", 10);
-
 stockActivitySubject.subscribe((stockActivity) => updatePortfolioStockInfo(stockActivity.stock));
+//stockSuggestionSubject.subscribe((stockSuggestion) => handleStockSuggestion(stockSuggestion));
+stockSuggestionSubject.subscribe((stockSuggestion) => updateStockMarkers(stockSuggestion));
+

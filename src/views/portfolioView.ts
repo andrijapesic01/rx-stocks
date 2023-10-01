@@ -172,19 +172,21 @@ export const updatePortfolioStockInfo = (stock: Stock): void => {
 
     const stockDiv: HTMLElement | null = document.getElementById(`portfolio-stock-${stock.id}`);
 
-    if(stockDiv === null) return;
+    if(stockDiv) {
+        if (stock) {
+            const currentPriceLabel: HTMLElement | null = stockDiv.querySelector(".current-value");
+            if (currentPriceLabel) {
+                currentPriceLabel.innerHTML = `${stock.price.toFixed(2)}`;
+            }
     
-    if (stock !== undefined) {
-        const currentPriceLabel: HTMLElement | null = stockDiv.querySelector(".curent-value");
-        if (currentPriceLabel) {
-            currentPriceLabel.innerHTML = `${stock.price.toFixed(2)}`;
+            const stockProfitLabel: HTMLElement | null = stockDiv.querySelector(".portfolio-stock-profit-value");
+            const boughtFor : number = Number(stockDiv.querySelector(".bought-for-value").innerHTML);
+            stockProfitLabel.innerHTML = `${(stock.price - boughtFor).toFixed(2)}`;
         }
-
-        const stockProfitLabel: HTMLElement | null = stockDiv.querySelector(".portfolio-stock-profit-value");
-        const boughtFor : number = Number(stockDiv.querySelector(".bought-for-value").innerHTML);
-        stockProfitLabel.innerHTML = `${(stock.price - boughtFor).toFixed(2)}`;
+    
+        updatePortfolioBalance();
     }
-
-    updatePortfolioBalance();
-
+    else {
+        console.log(stockDiv);
+    }
 };

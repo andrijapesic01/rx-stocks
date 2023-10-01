@@ -1,4 +1,6 @@
 import { portfolio } from "../constants";
+import { updatePortfolioStockInfo } from "../views/portfolioView";
+import { stockActivitySubject } from "./stocksLogic";
 
 export const calculateProfit = (): number => {
     return portfolio.stocks.reduce((totalProfit, boughtStock) => {
@@ -10,7 +12,7 @@ export const calculateProfit = (): number => {
 export const calculateStocksBalance = () : number => {
     return portfolio.stocks.reduce((stocksBalance, boughtStock) => {
         const { stock, boughtFor, quantity } = boughtStock;
-        return stocksBalance + stock.price;
+        return stocksBalance + stock.price*quantity;
     }, 0);
 }
 
