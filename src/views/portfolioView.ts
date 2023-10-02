@@ -3,10 +3,9 @@ import { calculateProfit } from "../logic/portfolioLogic";
 import { BoughtStock } from "../models/BoughtStock";
 import { Portfolio } from "../models/Portfolio";
 import { Stock } from "../models/Stock";
-import { portfolio } from "../constants";
 import { userSellStock } from "../logic/stocksLogic";
 
-export const drawPortfolio = (): void => {
+export const drawPortfolio = (portfolio: Portfolio) : void => {
 
     const portfolioDiv: HTMLElement = document.querySelector(".portfolio-section");
 
@@ -20,12 +19,10 @@ export const drawPortfolio = (): void => {
 
     const bottomDiv = createDiv(portfolioDiv, "portfolio-bottom-section");
 
-    //drawPortfolioStocks();
-    drawPortfolioBalance(bottomDiv);
-
+    drawPortfolioBalance(bottomDiv, portfolio);
 }
 
-export const drawPortfolioBalance = (host: HTMLElement): void => {
+export const drawPortfolioBalance = (host: HTMLElement, portfolio: Portfolio): void => {
     const topRowDiv = createDiv(host, "portfolio-bottom-row");
 
     const trdColumn1 = createDiv(topRowDiv, "portfolio-bottom-row-colum");
@@ -56,10 +53,10 @@ export const drawPortfolioBalance = (host: HTMLElement): void => {
 }
 
 export const drawPortfolioStocks = (portfolio: Portfolio): void => {
-    portfolio.stocks.forEach((stock) => drawPortfolioStock(stock));
+    portfolio.stocks.forEach((stock) => drawPortfolioStock(stock, portfolio));
 }
 
-export const drawPortfolioStock = (boughtStock: BoughtStock): void => {
+export const drawPortfolioStock = (boughtStock: BoughtStock, portfolio: Portfolio): void => {
 
     const { boughtFor, quantity, stock } = boughtStock;
 
@@ -103,18 +100,18 @@ export const drawPortfolioStock = (boughtStock: BoughtStock): void => {
     const sellButton: HTMLElement = document.createElement("button");
     sellButton.innerHTML = "Sell";
     sellButton.className = "buy-button";
-    sellButton.onclick = () => userSellStock(stock, parseInt(inputQuantity.value, 10));
-    sellColumn.appendChild(sellButton);
+    sellButton.onclick = () => userSellStock(stock, parseInt(inputQuantity.value, 10), portfolio);
+    sellColumn.appendChild(sellButton); 
 
-    updatePortfolioBalance()
+    updatePortfolioBalance(portfolio);
 }
 
-export const updatePortfolioBalance = (): void => {
+export const updatePortfolioBalance = (portfolio: Portfolio): void => {
 
     const stocksBalanceValue = document.querySelector(".stocks-value");
     stocksBalanceValue.innerHTML = `${portfolio.stocksBalance.toFixed(2)}`;
 
-    const totalProfit = calculateProfit();
+    const totalProfit = calculateProfit(portfolio);
     const totalProfitValue = document.querySelector(".total-profit-value");
     totalProfitValue.innerHTML = `${totalProfit.toFixed(2)}`;
 
@@ -125,26 +122,18 @@ export const updatePortfolioBalance = (): void => {
     totalValue.innerHTML = `${(portfolio.userBalance + portfolio.stocksBalance).toFixed(2)}`;
 }
 
-export const removePortfolioStock = (stockId: string): void => {
+export const removePortfolioStock = (stockId: string, portfolio: Portfolio): void => {
 
     const stockDivToRemove : HTMLElement | null = document.getElementById(`portfolio-stock-${stockId}`);
     if (stockDivToRemove !== null) {
         stockDivToRemove.remove();
-        updatePortfolioBalance();
+        updatePortfolioBalance(portfolio);
     }
 }
 
-/* export const updatePortfolioStock = (portfolioStock: BoughtStock): void => {
-    const { boughtFor, quantity, stock } = portfolioStock;
+export const updatePortfolioStock = (boughtStock: BoughtStock, portfolio: Portfolio): void => {
 
-    removePortfolioStock(stock.id);
-    drawPortfolioStock(portfolioStock);
-    updatePortfolioBalance()
-} */
-
-export const updatePortfolioStock = (portfolioStock: BoughtStock): void => {
-
-    const { boughtFor, quantity, stock } = portfolioStock;
+    const { boughtFor, quantity, stock } = boughtStock;
 
     const stockDiv: HTMLElement | null = document.getElementById(`portfolio-stock-${stock.id}`);
     if (stockDiv) {
@@ -155,7 +144,6 @@ export const updatePortfolioStock = (portfolioStock: BoughtStock): void => {
                 quantityLabel.innerHTML = `${stock.id} (${stock.name}) - ${quantity} stocks`;
             }
         }
-
         if (boughtFor !== undefined) {
             const boughtForValue: HTMLElement | null = stockDiv.querySelector(".bought-for-value");
             if (boughtForValue) {
@@ -163,12 +151,11 @@ export const updatePortfolioStock = (portfolioStock: BoughtStock): void => {
             }
         }
 
-        updatePortfolioStockInfo(stock);
-        //supdatePortfolioBalance();
+        updatePortfolioStockInfo(stock, portfolio);
     }
 }
 
-export const updatePortfolioStockInfo = (stock: Stock): void => {
+export const updatePortfolioStockInfo = (stock: Stock, portfolio: Portfolio): void => {
 
     const stockDiv: HTMLElement | null = document.getElementById(`portfolio-stock-${stock.id}`);
 
@@ -183,10 +170,6 @@ export const updatePortfolioStockInfo = (stock: Stock): void => {
             const boughtFor : number = Number(stockDiv.querySelector(".bought-for-value").innerHTML);
             stockProfitLabel.innerHTML = `${(stock.price - boughtFor).toFixed(2)}`;
         }
-    
-        updatePortfolioBalance();
-    }
-    else {
-        console.log(stockDiv);
+        updatePortfolioBalance(portfolio);
     }
 };

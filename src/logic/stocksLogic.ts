@@ -1,29 +1,30 @@
 import { Subject, debounceTime, filter, fromEvent, groupBy, interval, map, merge, mergeMap, of, scan, switchMap, tap } from "rxjs";
-import { INPUT_DEBOUNCE, portfolio } from "../constants";
-import { getStocks, getStocksByQuery, updateStock } from "../controllers/stockMarket.controller";
+import { INPUT_DEBOUNCE, MAX_INTERVAL, MIN_INTERVAL } from "../constants";
+import { getStocks, getStocksByQuery } from "../controllers/stockMarket.controller";
 import { BoughtStock } from "../models/BoughtStock";
 import { Stock } from "../models/Stock";
-import { drawPortfolioStock, removePortfolioStock, updatePortfolioBalance, updatePortfolioStock } from "../views/portfolioView";
-import { clearStocks, drawStock, refreshStock, updateStockMarkers, updateStockPrice } from "../views/stockView";
+import { drawPortfolioStock, removePortfolioStock, updatePortfolioBalance, updatePortfolioStock, updatePortfolioStockInfo } from "../views/portfolioView";
+import { clearStocks, drawStock, refreshStock } from "../views/stockView";
 import { calculateStocksBalance } from "./portfolioLogic";
 import { getRandomNum } from "../common";
 import { StockActivity, stockAction } from "../models/StockActivity";
 import { StockSuggestion } from "../models/StockSugestion";
+import { Portfolio } from "../models/Portfolio";
 
 export const stockActivitySubject = new Subject<StockActivity>();
 export const stockSuggestionSubject = new Subject<StockSuggestion>();
 
-export const loadStocks = (): void => {
+export const loadStocks = (portfolio: Portfolio): void => {
   getStocks().subscribe((stocks) => {
     monitorAndSuggest(stocks);
     stocks.forEach((stock) => {
-      drawStock(stock);
+      drawStock(stock, portfolio);
     })
   }
   );
 };
 
-export const handleSearch = (): void => {
+export const handleSearch = (portfolio: Portfolio): void => {
   const searchInput: HTMLInputElement = document.querySelector(".search-input");
   fromEvent(searchInput, "input")
     .pipe(
@@ -33,19 +34,18 @@ export const handleSearch = (): void => {
         if (query.length > 1) return true;
 
         clearStocks();
-        loadStocks();
+        loadStocks(portfolio);
       }),
       switchMap((query) => getStocksByQuery(query))
     )
-    .subscribe((stocks) => handleSearchResults(stocks));
+    .subscribe((stocks) => handleSearchResults(stocks, portfolio));
 };
 
-const handleSearchResults = (stocks: Stock[]): void => {
+const handleSearchResults = (stocks: Stock[], portfolio: Portfolio): void => {
   clearStocks();
 
   stocks.forEach((stock) => {
-    drawStock(stock);
-    //checkIfAdded(stock);
+    drawStock(stock, portfolio);
   });
 };
 
@@ -57,12 +57,11 @@ export const buyStock = (stock: Stock, quantity: number): Stock => {
   stock.percentChange = Number((stock.change / stock.price * 100).toFixed(2));
   stock.price = newPrice;
 
-  //const updatedStock = updateStock(stock);
   refreshStock(stock);
   return stock;
 }
 
-export const userBuyStock = (stock: Stock, quantity: number): void => {
+export const userBuyStock = (stock: Stock, quantity: number, portfolio: Portfolio): void => {
 
   if (quantity < 1 || isNaN(quantity)) {
     alert("Please select valid quantity to buy!");
@@ -80,15 +79,15 @@ export const userBuyStock = (stock: Stock, quantity: number): void => {
       foundObject.boughtFor = (foundObject.boughtFor * foundObject.quantity + stock.price * quantity)
         / (foundObject.quantity + quantity);
       foundObject.quantity += quantity;
-      portfolio.stocksBalance = calculateStocksBalance();
+      portfolio.stocksBalance = calculateStocksBalance(portfolio);
       updatedStock = buyStock(stock, quantity)
-      updatePortfolioStock(foundObject);
+      updatePortfolioStock(foundObject, portfolio);
     } else {
       updatedStock = buyStock(stock, quantity)
       const boughtStock: BoughtStock = { stock: updatedStock, boughtFor: stock.price - stock.change, quantity: quantity };
       portfolio.stocks.push(boughtStock);
-      portfolio.stocksBalance = calculateStocksBalance();
-      drawPortfolioStock(boughtStock)
+      portfolio.stocksBalance = calculateStocksBalance(portfolio);
+      drawPortfolioStock(boughtStock, portfolio);
     }
   }
 }
@@ -98,27 +97,24 @@ export const sellStock = (stock: Stock, quantity: number): Stock => {
     return;
   stock.index -= (stock.price + quantity * stock.index) / stock.price * stock.index;
   let newPrice = stock.price - stock.index * (0.3 * stock.price + stock.change) / stock.price;
-  newPrice = newPrice >= 0 ? newPrice : 0;
   stock.change = stock.price - newPrice;
   stock.percentChange = Number((stock.change / stock.price * 100).toFixed(2));
   stock.price = newPrice;
-  refreshStock(stock);
   return stock;
 }
 
-export const userSellStock = (stock: Stock, quantity: number): void => {
-  const updatedStock = sellStock(stock, quantity);
-  //updateStock(updatedStock); 
+export const userSellStock = (stock: Stock, quantity: number, portfolio: Portfolio): void => {
+  sellStock(stock, quantity);
   portfolio.userBalance += stock.price * quantity;
   const updatedBoughtStocks = portfolio.stocks.filter((portfolioStock) => portfolioStock.stock.id !== stock.id);
   portfolio.stocks = updatedBoughtStocks;
-  portfolio.stocksBalance = calculateStocksBalance();
-  removePortfolioStock(stock.id);
+  portfolio.stocksBalance = calculateStocksBalance(portfolio);
+  removePortfolioStock(stock.id, portfolio);
 }
 
 export const simulateStockActivity = (stock: Stock) => {
 
-  return interval(getRandomNum(10500, 22500)).pipe(
+  return interval(getRandomNum(MIN_INTERVAL, MAX_INTERVAL)).pipe(
     mergeMap(() => {
       const randomStockQuantity = getRandomNum(1, 20);
       const randomAction = getRandomNum(0, 2) >= 1 ? stockAction.SELL : stockAction.BUY;
@@ -198,7 +194,8 @@ export const monitorAndSuggest = (stocks: Stock[]): void => {
       }),
     ).subscribe();
 };
-/* 
-export const handleStockSuggestion = (suggestion: StockSuggestion) : void => {
-  updateStockMarkers(suggestion); 
-} */
+
+export const handleStockChange = (stockActivity: StockActivity, portfolio: Portfolio): void => {
+  refreshStock(stockActivity.stock);
+  updatePortfolioStockInfo(stockActivity.stock, portfolio);
+}

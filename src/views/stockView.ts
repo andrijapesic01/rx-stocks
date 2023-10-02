@@ -1,15 +1,15 @@
 import { createDiv } from "../common"
-import { updateStock } from "../controllers/stockMarket.controller";
+//import { updateStock } from "../controllers/stockMarket.controller";
 import { userBuyStock } from "../logic/stocksLogic";
+import { Portfolio } from "../models/Portfolio";
 import { Stock } from "../models/Stock";
 import { StockSuggestion } from "../models/StockSugestion";
-import { drawPortfolio, drawPortfolioStock } from "./portfolioView";
 
 export const drawStockMarket = (host: HTMLElement): void => {
     const mainCont: HTMLElement = createDiv(host, "main-container");
 
     const titleDiv: HTMLElement = createDiv(mainCont, "top-section");
-    titleDiv.innerHTML = "STOCKS MARKET";
+    titleDiv.innerHTML = "STOCKS TRADER";
 
     const marketCont: HTMLElement = createDiv(mainCont, "bottom-section");
 
@@ -26,11 +26,9 @@ export const drawStockMarket = (host: HTMLElement): void => {
     searchInput.className = "search-input";
     searchInput.setAttribute("placeholder", "Search stocks");
     stocksCont.appendChild(searchInput);
-
-    drawPortfolio();
 }
 
-export const drawStock = (stock: Stock): void => {
+export const drawStock = (stock: Stock, portfolio: Portfolio): void => {
     const host: HTMLElement = document.querySelector(".stocks-section");
 
     const stockDiv: HTMLElement = createDiv(host, "stock");
@@ -70,7 +68,7 @@ export const drawStock = (stock: Stock): void => {
     const buyBtn: HTMLElement = document.createElement("button");
     buyBtn.innerHTML = "Buy";
     buyBtn.className = "buy-button";
-    buyBtn.onclick = () => userBuyStock(stock, parseInt(stockQuantity.value, 10));
+    buyBtn.onclick = () => userBuyStock(stock, parseInt(stockQuantity.value, 10), portfolio);
     buyDiv.appendChild(buyBtn);
 
     const markerDiv: HTMLElement = createDiv(buyDiv, "stock-marker");
@@ -135,6 +133,5 @@ export const updateStockMarkers = (suggestion: StockSuggestion): void => {
     if (coldMarker) {
         coldMarker.src = `./icons/ice.png`;
         coldMarker.style.visibility = 'visible';
-        console.log("COLD MARKER TEST");
     }
 }

@@ -1,14 +1,21 @@
-import { handleSearch, loadStocks, stockActivitySubject, stockSuggestionSubject } from "./logic/stocksLogic";
-import { updatePortfolioStock, updatePortfolioStockInfo } from "./views/portfolioView";
+import { PORTFOLIO_NAME, USER_BALANCE } from "./constants";
+import { handleSearch, handleStockChange, loadStocks, stockActivitySubject, stockSuggestionSubject } from "./logic/stocksLogic";
+import { Portfolio } from "./models/Portfolio";
+import { drawPortfolio } from "./views/portfolioView";
 import { drawStockMarket, updateStockMarkers } from "./views/stockView";
 
-drawStockMarket(document.body);
+const portfolio: Portfolio = {
+    name: PORTFOLIO_NAME,
+    stocks: [],
+    userBalance: USER_BALANCE,
+    stocksBalance: 0,
+}
 
-loadStocks();
-//simulateMarket();
-handleSearch();
-//loadPortfolio();
-stockActivitySubject.subscribe((stockActivity) => updatePortfolioStockInfo(stockActivity.stock));
-//stockSuggestionSubject.subscribe((stockSuggestion) => handleStockSuggestion(stockSuggestion));
+drawStockMarket(document.body);
+loadStocks(portfolio);
+drawPortfolio(portfolio);
+handleSearch(portfolio);
+
+stockActivitySubject.subscribe((stockActivity) => handleStockChange(stockActivity, portfolio));
 stockSuggestionSubject.subscribe((stockSuggestion) => updateStockMarkers(stockSuggestion));
 
